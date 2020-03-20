@@ -1,0 +1,27 @@
+<div *ngIf="realtors$ | async as realtors" class="app-header">
+    <div class="app-header-title">
+        <div class="app-header-title-icon"></div>
+        <div class="app-header-title-mail">
+            <fa-icon [icon]="faEnvelope" class="app-header-title-mail-icon"></fa-icon>
+            <span class="app-header-title-mail-text">{{ (realtorSelected$ | async).unread_messages }}</span>
+        </div>
+    </div>
+    <div class="app-header-user">
+        <div ngbDropdown class="d-inline-block app-header-user-dropdown">
+            <div class="nav-link app-header-user-dropdown"  ngbDropdownToggle id="navbarDropdown3" role="button">
+                <ng-container *ngIf='(realtorSelected$ | async) as realtorSelected'>
+                    <img class="app-header-user-dropdown-logo" src="https://i.pinimg.com/originals/f6/57/41/f6574148377861774468e28ff7741d44.png">
+                    <div class="app-header-user-dropdown-detail">
+                        <span class="app-header-user-dropdown-detail-name">Pinkie Pie</span>
+                        <span class="app-header-user-dropdown-detail-agence">{{ realtorSelected.name }}</span>
+                    </div>
+                </ng-container>
+            </div>
+            <div ngbDropdownMenu aria-labelledby="navbarDropdown3" class="dropdown-menu">
+                <span ngbDropdownItem *ngFor="let realtor of realtors" (click)="selectRealtors(realtor)"><img class="app-header-user-dropdown-logo" [src]="realtor.logo">{{ realtor.name }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+

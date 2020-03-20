@@ -10,14 +10,25 @@
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es5",
+    "mapRoot": "./",
     "lib": [
-      "es2018",
+      "es6",
+      "es2019",
       "dom"
-    ]
+    ],
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters" : true,
+    "skipLibCheck": false,
   },
   "angularCompilerOptions": {
+    "preserveWhitespaces": false,
+    "annotateForClosureCompiler": true,
+    "skipTemplateCodegen": false,
+    "strictMetadataEmit": true,
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "strictTemplates": false
   }
 }
