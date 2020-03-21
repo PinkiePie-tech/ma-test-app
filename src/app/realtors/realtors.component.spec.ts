@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RealtorsComponent } from './realtors.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule } from '@angular/common/http';
+import { RealtorService } from '../shared/services/realtors.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 describe('RealtorsComponent', () => {
   let component: RealtorsComponent;
@@ -8,7 +12,15 @@ describe('RealtorsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RealtorsComponent ]
+      imports: [
+        HttpClientModule,
+        RouterTestingModule
+      ],
+      declarations: [ RealtorsComponent ],
+      providers: [
+        RealtorService,
+        DeviceDetectorService
+      ]
     })
     .compileComponents();
   }));

@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RealtorsDetailsComponent } from './realtors-details.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule } from '@angular/common/http';
+import { RealtorService } from 'src/app/shared/services/realtors.service';
 
 describe('RealtorsDetailsComponent', () => {
   let component: RealtorsDetailsComponent;
@@ -8,7 +11,14 @@ describe('RealtorsDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RealtorsDetailsComponent ]
+      imports: [
+        HttpClientModule,
+        RouterTestingModule
+      ],
+      declarations: [ RealtorsDetailsComponent ],
+      providers: [
+        RealtorService
+      ]
     })
     .compileComponents();
   }));
