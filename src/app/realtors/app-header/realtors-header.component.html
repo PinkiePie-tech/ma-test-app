@@ -1,7 +1,7 @@
 <div class="realtor-header">
     <div class="realtor-header-title">
         <div class="realtor-header-title-icon"></div>
-        <button class="realtor-header-title-mail" [disabled]="(realtorSelected$ | async)?.unread_messages === 0" (click)="unsetMessage()">
+        <button class="realtor-header-title-mail" [disabled]="!(realtorSelected$ | async) || (realtorSelected$ | async)?.unread_messages === 0" (click)="unsetMessage()">
             <fa-icon [icon]="faEnvelope" class="realtor-header-title-mail-icon"></fa-icon>
             <ng-container [ngSwitch]="!!(realtorSelected$ | async)">
                 <span *ngSwitchCase="false" class="realtor-header-title-mail-text">0</span>
