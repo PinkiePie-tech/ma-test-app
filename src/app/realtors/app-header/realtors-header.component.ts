@@ -33,16 +33,14 @@ export class RealtorsHeaderComponent extends NavigateWithQueryParams implements 
           return of(undefined);
         }
       })
-    ).subscribe((realtor: Realtors) => {
-      this.realtorSelected$.next(realtor);
-    }));
+    ).subscribe(this.realtorSelected$));
   }
 
   ngOnInit(): void {
     this.realtors$ = this.realtorService.getAllRealtors().pipe(
       tap(realtors => {
         if (!this.realtorSelected$.getValue() && realtors.length > 0) {
-          this.realtorSelected$.next(realtors[0]);
+          this.selectRealtors(realtors[0]);
         }
       })
     );

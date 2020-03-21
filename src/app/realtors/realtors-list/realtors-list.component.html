@@ -1,1 +1,34 @@
-<p>realtors-list works!</p>
+<div class="realtor-list">
+    <div *ngFor="let message of (messages$ | async)" (click)="selectMessage(message)" class="realtor-list-message">
+        <div class="realtor-list-message-icon">
+            <ng-container [ngSwitch]="message.type">
+                <span *ngSwitchCase="'sms'">
+                    <fa-icon [icon]="faSms" class="realtor-list-message-icon-image" [ngClass]="{'read': message.read, 'unread': !message.read}"></fa-icon>
+                </span>
+                <span *ngSwitchCase="'phone'">
+                    <fa-icon [icon]="faPhoneAlt" class="realtor-list-message-icon-image" [ngClass]="{'read': message.read, 'unread': !message.read}"></fa-icon>
+                </span>
+                <span *ngSwitchCase="'email'">
+                    <fa-icon [icon]="message.read ? faEnvelopeOpen : faEnvelope" class="realtor-list-message-icon-image" [ngClass]="{'read': message.read, 'unread': !message.read}"></fa-icon>
+                </span>
+                <span *ngSwitchDefault>
+                    <fa-icon [icon]="faQuestion" class="realtor-list-message-icon-image"></fa-icon>
+                </span>
+            </ng-container>
+        </div>
+        <div class="realtor-list-message-content">
+            <div class="realtor-list-message-content-title">
+                <span class="realtor-list-message-content-title-text" [ngClass]="{'read': message.read}" data-toggle="tooltip" title="{{ message.sendBy }} ({{message.contact.phone}}) {{message.contact.email}}">
+                    {{ message.sendBy }}
+                    <span *ngIf="!message.sendBy">{{message.contact.phone}}</span>
+                    <span *ngIf="message.sendBy && message.contact.phone" class='realtor-list-message-content-title-text-number'>({{message.contact.phone}})</span>
+                </span>
+                <span class="realtor-list-message-content-title-date" [ngClass]="{'read': message.read, 'unread': !message.read}">
+                    {{ message.getDateReadable() }}
+                </span>
+            </div>
+            <span class="realtor-list-message-content-by" [ngClass]="{'read': message.read}">{{ message.subject }}</span>
+            <span class="realtor-list-message-content-description" [ngClass]="{'read': message.read}">{{ message.body }}</span>
+        </div>
+    </div>
+</div>

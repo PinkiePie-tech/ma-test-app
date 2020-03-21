@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
+import { faEnvelope, faPhoneAlt, faSms, faQuestion, faEnvelopeOpen } from '@fortawesome/free-solid-svg-icons';
+import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { RealtorService } from 'src/app/shared/services/realtors.service';
 import { NavigateWithQueryParams } from 'src/app/shared/model/navigation';
 import { Message } from 'src/app/shared/model/message';
-import { distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, tap, filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-realtors-list',
@@ -14,9 +14,14 @@ import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 })
 export class RealtorsListComponent extends NavigateWithQueryParams implements OnInit, OnDestroy {
   public faEnvelope = faEnvelope;
+  public faEnvelopeOpen = faEnvelopeOpen;
+  public faPhoneAlt = faPhoneAlt;
+  public faSms = faSms;
+  public faQuestion = faQuestion;
   public messageUnread = 3;
-  public realtorSelected$: BehaviorSubject<Message> = new BehaviorSubject<Message>(undefined);
-  public realtors$: Observable<Message[]>;
+  public messageSelected$: BehaviorSubject<Message> = new BehaviorSubject<Message>(undefined);
+  public messages$: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
+  public realtor$: BehaviorSubject<string> = new BehaviorSubject<string>(undefined);
   private subscription = new Subscription();
 
   constructor(
@@ -29,31 +34,42 @@ export class RealtorsListComponent extends NavigateWithQueryParams implements On
       distinctUntilChanged(),
       switchMap((queryParams: Params) => {
         if (queryParams.realtor) {
-          return this.realtorService.getAllMessagesFromRealtor(queryParams.realtor);
+          this.realtor$.next(queryParams.realtor);
+          return queryParams.message ? this.realtorService.getMessageFromRealtor(queryParams.realtor, queryParams.message) : of(undefined);
         } else {
           return of(undefined);
         }
       })
-    ).subscribe((realtor: Message) => {
-      this.realtorSelected$.next(realtor);
-    }));
+    ).subscribe(this.messageSelected$));
   }
 
   ngOnInit(): void {
-    // this.realtors$ = this.realtorService.getAllRealtors().pipe(
-    //   tap(realtors => {
-    //     if (!this.realtorSelected$.getValue() && realtors.length > 0) {
-    //       this.realtorSelected$.next(realtors[0]);
-    //     }
-    //   })
-    // );
+    this.subscription.add(this.realtor$.pipe(
+      distinctUntilChanged(),
+      filter(realtor => !!realtor),
+      switchMap(realtor => this.realtorService.getAllMessagesFromRealtor(realtor).pipe(
+        tap(messages => {
+          if (!this.messageSelected$.getValue() && messages.length > 0) {
+            this.messageSelected$.next(messages[0]);
+          }
+        })
+      )),
+      map((messages: Message[]) => {
+        return messages.sort((a, b) => Date.parse(b.date.toISOString()) - Date.parse(a.date.toISOString()));
+      })
+    ).subscribe(this.messages$));
+
+    this.messageSelected$.subscribe((message: Message) => {
+      console.log(message);
+      // TODO : Modifier en lu le message
+    });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  public selectRealtors(realtor: Message) {
-    this.navigate({realtor: realtor.id});
+  public selectMessage(message: Message) {
+    this.navigate({message: message.id});
   }
 }
