@@ -50,8 +50,9 @@ export class RealtorService {
         );
     }
 
-    public getMessageFromRealtor(realtorId: string, messageId: string): Observable<Message> {
+    public getMessageFromRealtor(realtorId: string, messageId: number): Observable<Message> {
         return this.http.get<Message>(`${this.apiUrl}/realtors/${realtorId}/messages/${messageId}`).pipe(
+            map(message => new Message(message)),
             catchError(error => {
                 console.error(error);
                 return of(undefined);
@@ -59,7 +60,7 @@ export class RealtorService {
         );
     }
 
-    public updateMessageFromRealtor(realtorId: string, messageId: string, body: Partial<Message>): Observable<Message> {
+    public updateMessageFromRealtor(realtorId: string, messageId: number, body: Partial<Message>): Observable<Message> {
         return this.http.patch<Message>(`${this.apiUrl}/realtors/${realtorId}/messages/${messageId}`, body).pipe(
             catchError(error => {
                 console.error(error);

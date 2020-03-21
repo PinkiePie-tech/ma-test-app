@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { RealtorService } from 'src/app/shared/services/realtors.service';
 import { NavigateWithQueryParams } from 'src/app/shared/model/navigation';
 import { Message } from 'src/app/shared/model/message';
-import { distinctUntilChanged, switchMap, tap, filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-realtors-list',
@@ -18,7 +18,6 @@ export class RealtorsListComponent extends NavigateWithQueryParams implements On
   public faPhoneAlt = faPhoneAlt;
   public faSms = faSms;
   public faQuestion = faQuestion;
-  public messageUnread = 3;
   public messageSelected$: BehaviorSubject<Message> = new BehaviorSubject<Message>(undefined);
   public messages$: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>([]);
   public realtor$: BehaviorSubject<string> = new BehaviorSubject<string>(undefined);
@@ -47,21 +46,28 @@ export class RealtorsListComponent extends NavigateWithQueryParams implements On
     this.subscription.add(this.realtor$.pipe(
       distinctUntilChanged(),
       filter(realtor => !!realtor),
-      switchMap(realtor => this.realtorService.getAllMessagesFromRealtor(realtor).pipe(
-        tap(messages => {
-          if (!this.messageSelected$.getValue() && messages.length > 0) {
-            this.messageSelected$.next(messages[0]);
-          }
-        })
-      )),
+      switchMap(realtor => this.realtorService.getAllMessagesFromRealtor(realtor)),
       map((messages: Message[]) => {
         return messages.sort((a, b) => Date.parse(b.date.toISOString()) - Date.parse(a.date.toISOString()));
       })
     ).subscribe(this.messages$));
 
     this.messageSelected$.subscribe((message: Message) => {
-      console.log(message);
-      // TODO : Modifier en lu le message
+      if (message && !message.read) {
+        this.realtorService.updateMessageFromRealtor(this.realtor$.getValue(), message.id, {read: true})
+        .subscribe(() => {
+          const messages = this.messages$.getValue();
+          this.messages$.next(messages
+            .map((value: Message) => {
+              if (value.id === message.id) {
+                value.read = true;
+              }
+              return value;
+            })
+          );
+          this.navigate({refresh: true});
+        });
+      }
     });
   }
 

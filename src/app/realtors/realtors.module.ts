@@ -6,23 +6,30 @@ import { RealtorsComponent } from './realtors.component';
 import { RealtorsHeaderComponent } from './app-header/realtors-header.component';
 import { SharedModule } from '../shared/shared.module';
 import { RealtorService } from '../shared/services/realtors.service';
+import { DatePipe } from '../shared/pipe/DatePipe';
+import { PhonePipe } from '../shared/pipe/PhonePipe';
+import { DeviceDetectorModule, DeviceDetectorService } from 'ngx-device-detector';
 
 @NgModule({
   declarations: [
     RealtorsHeaderComponent,
     RealtorsListComponent,
     RealtorsDetailsComponent,
-    RealtorsComponent
+    RealtorsComponent,
+    DatePipe,
+    PhonePipe
   ],
   imports: [
     SharedModule,
-    CommonModule
+    CommonModule,
+    DeviceDetectorModule
   ],
   exports: [
     RealtorsComponent
   ],
   providers: [
-    RealtorService
+    RealtorService,
+    DeviceDetectorService
   ]
 })
 export class RealtorsModule { }

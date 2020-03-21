@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { Realtors } from 'src/app/shared/model/realtors';
@@ -13,6 +13,8 @@ import { tap, distinctUntilChanged, switchMap } from 'rxjs/operators';
   styleUrls: ['./realtors-header.component.sass']
 })
 export class RealtorsHeaderComponent extends NavigateWithQueryParams implements OnInit, OnDestroy {
+  @Input() refreshCounter: boolean;
+
   public faEnvelope = faEnvelope;
   public realtorSelected$: BehaviorSubject<Realtors> = new BehaviorSubject<Realtors>(undefined);
   public realtors$: Observable<Realtors[]>;
@@ -25,14 +27,17 @@ export class RealtorsHeaderComponent extends NavigateWithQueryParams implements 
   ) {
     super(router, route);
     this.subscription.add(this.route.queryParams.pipe(
-      distinctUntilChanged(),
       switchMap((queryParams: Params) => {
+        if (queryParams.refresh) {
+          this.navigate({refresh: undefined});
+        }
         if (queryParams.realtor) {
           return this.realtorService.getRealtor(queryParams.realtor);
         } else {
           return of(undefined);
         }
-      })
+      }),
+      distinctUntilChanged()
     ).subscribe(this.realtorSelected$));
   }
 
@@ -53,5 +58,9 @@ export class RealtorsHeaderComponent extends NavigateWithQueryParams implements 
 
   public selectRealtors(realtor: Realtors) {
     this.navigate({realtor: realtor.id});
+  }
+
+  public unsetMessage() {
+    this.navigate({message: undefined});
   }
 }

@@ -1,3 +1,18 @@
-<div class="realtors-details">
-    <p>realtors-details works!</p>
+<div class="realtors-details" *ngIf="messageSelected$ | async as messageSelected">
+    <div *ngIf="messageSelected.contact" class="realtors-details-subject">
+        <div class="realtors-details-subject-title">{{ messageSelected.sendBy }}</div>
+        <div *ngIf="messageSelected.contact.email" class="realtors-details-subject-mail">
+            <span class="realtors-details-subject-mail-label">Email</span>
+            <span class="realtors-details-subject-mail-value">{{ messageSelected.contact.email }}</span>
+        </div>
+        <div *ngIf="messageSelected.contact.phone" class="realtors-details-subject-phone">
+            <span class="realtors-details-subject-phone-label">Téléphone</span>
+            <span class="realtors-details-subject-phone-value">{{ messageSelected.contact.phone | maPhone:'FR' }}</span>
+        </div>
+    </div>
+    <div class="realtors-details-body">
+        <div class="realtors-details-body-title">{{ messageSelected.sendBy }}</div>
+        <div class="realtors-details-body-date">{{ messageSelected.date | maDate }}</div>
+        <div class="realtors-details-body-description">{{ messageSelected.body }}</div>
+    </div>
 </div>

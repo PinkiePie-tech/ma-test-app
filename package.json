@@ -27,6 +27,8 @@
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@ng-bootstrap/ng-bootstrap": "^6.0.0",
     "bootstrap": "^4.4.1",
+    "libphonenumber-js": "^1.7.48",
+    "ngx-device-detector": "^1.4.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

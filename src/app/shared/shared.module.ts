@@ -13,8 +13,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         NgbModule,
         FontAwesomeModule
     ],
-    declarations: [
-    ],
     providers: [
       NgbActiveModal
     ]

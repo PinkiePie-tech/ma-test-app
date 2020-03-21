@@ -22,6 +22,7 @@ export class Message {
     private MS_PER_DAY = 1000 * 60 * 60 * 24;
 
     constructor(data: Message) {
+        // Permet de transformer une interface en class pour en utiliser les méthodes
         for (const key in data) {
             if (data.hasOwnProperty(key)) {
                 switch (key) {

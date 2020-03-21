@@ -1,6 +1,12 @@
 
 <app-realtors-header></app-realtors-header>
 <div class="realtors-content">
-    <app-realtors-list class="realtors-content-list"></app-realtors-list>
-    <app-realtors-details class="realtors-content-detail"></app-realtors-details>
+    <ng-container *ngIf="desktop">
+        <app-realtors-list class="realtors-content-list"></app-realtors-list>
+        <app-realtors-details class="realtors-content-detail"></app-realtors-details>
+    </ng-container>
+    <ng-container *ngIf="!desktop">
+        <app-realtors-list *ngIf="showList$ | async" class="realtors-content-list"></app-realtors-list>
+        <app-realtors-details *ngIf="showDetails$ | async" class="realtors-content-detail"></app-realtors-details>
+    </ng-container>
 </div>
