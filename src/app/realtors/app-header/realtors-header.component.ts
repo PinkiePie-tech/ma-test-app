@@ -38,6 +38,7 @@ export class RealtorsHeaderComponent extends NavigateWithQueryParams implements 
 
   ngOnInit(): void {
     this.realtors$ = this.realtorService.getAllRealtors().pipe(
+      distinctUntilChanged(),
       tap(realtors => {
         if (!this.realtorSelected$.getValue() && realtors.length > 0) {
           this.selectRealtors(realtors[0]);

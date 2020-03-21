@@ -40,18 +40,18 @@ export class Message {
     public getDateReadable() {
         if (this.date) {
             const now = new Date();
-            const utc1 = Date.parse(now.toISOString());
-            const utc2 = Date.parse(this.date.toISOString());
-            const diffTime = Math.abs(utc1 - utc2);
+            const utc1 = Date.UTC(now.getFullYear(), now.getMonth() + 1, now.getDate());
+            const utc2 = Date.UTC(this.date.getFullYear(), this.date.getMonth() + 1, this.date.getDate());
+            const diffTime = utc1 - utc2;
             const diffDays = Math.floor(diffTime / this.MS_PER_DAY);
-            if (now.getDate() === this.date.getDate()) {
+            if ( diffDays < 1) {
                 return `${this.date.getHours()}:${(this.date.getMinutes() > 9 ? '' : '0') + this.date.getMinutes()}`;
-            } else if (diffDays < 1) {
+            } else if (diffDays === 1) {
                 return 'Hier';
             } else if (diffDays < 7) {
                 return this.days[this.date.getDay()];
             } else {
-                return `${this.date.getDate() + 1}/${this.date.getMonth() + 1}/${this.date.getUTCFullYear()}`;
+                return `${this.date.getDate()}/${this.date.getMonth() + 1}/${this.date.getUTCFullYear()}`;
             }
         } else {
             return '???';
